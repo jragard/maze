@@ -16,23 +16,6 @@ const map = [
     "WWWWWWWWWWWWWWWWWWWWW"
 ];
 
-
-// ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
-// ["W", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", "W", " ", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", "W", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", " ", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", "W", "W", " ", "W", " ", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", " ", " ", "W", " ", " ", " ", "W", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W", " ", "W", "W", "W", " ", "W", " ", "F"]
-// ["S", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", "W", "W"]
-// ["W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W", " ", " ", " ", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", "W"]
-// ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
-
 const mapArray = [];
 
 for (let i = 0; i < map.length; i++) {
@@ -54,8 +37,8 @@ function createPlayer() {
 }
 
 function createMaze() {
-    for (i = 0; i < map.length; i++) {
-        for (j = 0; j < map[0].length; j++) {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
             if (map[i].substr(j, 1) === "W") {
                 createDiv("wall");
             }
@@ -83,53 +66,41 @@ let startLeft = 300;
 
 document.addEventListener("keydown", (event) => {
     const keyName = event.key;
-    
-    for (i = 0; i < mapArray.length; i++) {
-        for (j = 0; j < mapArray[i].length; j++) {
+
+    outerloop: for (let i = 0; i < mapArray.length; i++) {
+        innerloop: for (let j = 0; j < mapArray[i].length; j++) {
             if (mapArray[i][j] === "S" && mapArray[i][j + 1] === " " && keyName === "ArrowRight") {
                 startLeft += 40;
                 mapArray[i][j] = " ";
                 mapArray[i][j + 1] = "S";
                 break;
-          } if (mapArray[i][j] === "S" && mapArray[i][j - 1] === " " && keyName === "ArrowLeft") {
-              startLeft -= 40;
-              mapArray[i][j] = " ";
-              mapArray[i][j - 1] = "S";
-              break;
-          } if (mapArray[i][j] === "S" && mapArray[i - 1][j] === " " && keyName === "ArrowUp") {
-              startTop -= 40;
-              mapArray[i][j] = " ";
-              mapArray[i - 1][j] = "S";
-              break;
-          } if (mapArray [i][j] === "S" && mapArray[i + 1][j] === " " && keyName === "ArrowDown") {
-              startTop += 40;
-              mapArray[i][j] = " ";
-              mapArray[i + 1][j] = "S";
-              break;
-          } if (mapArray[i][j] === "S" && mapArray[i][j + 1] === "F" && keyName === "ArrowRight") {
-              startLeft += 40;
-              printWin();
-              break;
-          }
+            }
+            if (mapArray[i][j] === "S" && mapArray[i][j - 1] === " " && keyName === "ArrowLeft") {
+                startLeft -= 40;
+                mapArray[i][j] = " ";
+                mapArray[i][j - 1] = "S";
+                break;
+            }
+            if (mapArray[i][j] === "S" && mapArray[i - 1][j] === " " && keyName === "ArrowUp") {
+                startTop -= 40;
+                mapArray[i][j] = " ";
+                mapArray[i - 1][j] = "S";
+                break;
+            }
+            if (mapArray[i][j] === "S" && mapArray[i + 1][j] === " " && keyName === "ArrowDown") {
+                startTop += 40;
+                mapArray[i][j] = " ";
+                mapArray[i + 1][j] = "S";
+                break outerloop;
+            }
+            if (mapArray[i][j] === "S" && mapArray[i][j + 1] === "F" && keyName === "ArrowRight") {
+                startLeft += 40;
+                printWin();
+                break outerloop;
+            }
 
+        }
     }
-}
-
-// ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
-// ["W", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", "W", " ", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", "W", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", " ", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", "W", "W", " ", "W", " ", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", " ", " ", "W", " ", " ", " ", "W", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W", " ", "W", "W", "W", " ", "W", " ", "F"]
-// ["S", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", "W", "W"]
-// ["W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W", " ", " ", " ", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", "W"]
-// ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
 
     document.getElementsByClassName("player")[0].style.top = startTop + "px";
     document.getElementsByClassName("player")[0].style.left = startLeft + "px";
@@ -139,5 +110,8 @@ document.addEventListener("keydown", (event) => {
 function printWin() {
     let destination = document.getElementById("winMessage");
     text = document.createTextNode("You Win!");
+    startLeft += 0;
+    document.getElementsByClassName("player")[0].style.left = startLeft + "px";
     destination.appendChild(text);
+    // document.removeEventListener("keydown");
 }
