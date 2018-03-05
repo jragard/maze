@@ -1,0 +1,53 @@
+#flex {
+    display: flex;
+    justify-content: center;
+}
+
+#flex2 {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+#container {
+    display: flex;
+    flex-flow: row wrap;
+    width: 840px;
+    
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+}
+
+.floor {
+    background-color: white;
+    
+}
+
+.wall {
+    background-color: navy;
+   
+}
+
+.player {
+    width: 40px;
+    height: 40px;
+    background-color: green;
+    position: absolute;
+    left: 300px;
+    top: 440px;
+}
+
+#winMessage {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 75px;
+    font-weight: bold;
+    
+}
+
