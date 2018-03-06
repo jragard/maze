@@ -34,39 +34,48 @@ const map = [
 // ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
 
 const mapArray = [];
+let prevCell;
+let playerDiv;
 
 for (let i = 0; i < map.length; i++) {
     mapArray.push([]);
     mapArray[i].push(...map[i].split(""));
 }
 
-function createDiv(type) {
+function createDiv(type, row, cell) {
     divEl = document.createElement("div");
     divEl.className = "cell " + type;
+
+    // https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes#JavaScript_access
+    divEl.dataset['cell'] = cell;
+    divEl.dataset['row'] = row;
+
     document.getElementById("container").appendChild(divEl);
 }
 
 function createPlayer() {
     playerDiv = document.createElement("div");
     playerDiv.className = "player";
-    startCell = document.getElementsByClassName("start");
-    startCell[0].appendChild(playerDiv);
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+    [startCell] = document.getElementsByClassName("start");
+    startCell.appendChild(playerDiv);
+    prevCell = startCell;
 }
 
 function createMaze() {
-    for (i = 0; i < map.length; i++) {
-        for (j = 0; j < map[0].length; j++) {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
             if (map[i].substr(j, 1) === "W") {
-                createDiv("wall");
+                createDiv("wall", i, j);
             }
             if (map[i].substr(j, 1) === " ") {
-                createDiv("floor");
+                createDiv("floor", i, j);
             }
             if (map[i].substr(j, 1) === "S") {
-                createDiv("start");
+                createDiv("start", i, j);
             }
             if (map[i].substr(j, 1) === "F") {
-                createDiv("finish");
+                createDiv("finish", i, j);
             }
         }
     }
@@ -78,63 +87,58 @@ window.onload = function () {
     createPlayer();
 }
 
-let startTop = 440;
-let startLeft = 300;
-
 document.addEventListener("keydown", (event) => {
     const keyName = event.key;
-    
-    for (i = 0; i < mapArray.length; i++) {
-        for (j = 0; j < mapArray[i].length; j++) {
+
+    outerloop:
+    for (let i = 0; i < mapArray.length; i++) {
+
+        innerloop:
+        for (let j = 0; j < mapArray[i].length; j++) {
+
             if (mapArray[i][j] === "S" && mapArray[i][j + 1] === " " && keyName === "ArrowRight") {
-                startLeft += 40;
                 mapArray[i][j] = " ";
                 mapArray[i][j + 1] = "S";
+                // https://stackoverflow.com/questions/4559032/easy-to-understand-definition-of-asynchronous-event
+                // https://rowanmanning.com/posts/javascript-for-beginners-async/
+                moveCell(i, j + 1);
                 break;
-          } if (mapArray[i][j] === "S" && mapArray[i][j - 1] === " " && keyName === "ArrowLeft") {
-              startLeft -= 40;
-              mapArray[i][j] = " ";
-              mapArray[i][j - 1] = "S";
-              break;
-          } if (mapArray[i][j] === "S" && mapArray[i - 1][j] === " " && keyName === "ArrowUp") {
-              startTop -= 40;
-              mapArray[i][j] = " ";
-              mapArray[i - 1][j] = "S";
-              break;
-          } if (mapArray [i][j] === "S" && mapArray[i + 1][j] === " " && keyName === "ArrowDown") {
-              startTop += 40;
-              mapArray[i][j] = " ";
-              mapArray[i + 1][j] = "S";
-              break;
-          } if (mapArray[i][j] === "S" && mapArray[i][j + 1] === "F" && keyName === "ArrowRight") {
-              startLeft += 40;
-              printWin();
-              break;
-          }
+            } if (mapArray[i][j] === "S" && mapArray[i][j - 1] === " " && keyName === "ArrowLeft") {
+                mapArray[i][j] = " ";
+                mapArray[i][j - 1] = "S";
+                moveCell(i, j - 1);
+                break;
+            } if (mapArray[i][j] === "S" && mapArray[i - 1][j] === " " && keyName === "ArrowUp") {
+                mapArray[i][j] = " ";
+                mapArray[i - 1][j] = "S";
+                moveCell(i - 1, j);
+                break;
+            } if (mapArray[i][j] === "S" && mapArray[i + 1][j] === " " && keyName === "ArrowDown") {
+                mapArray[i][j] = " ";
+                mapArray[i + 1][j] = "S";
+                moveCell(i + 1, j);
+                break outerloop;
+            } if (mapArray[i][j] === "S" && mapArray[i][j + 1] === "F" && keyName === "ArrowRight") {
+                printWin();
+                break;
+            }
+
+        }
+
 
     }
-}
 
-// ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
-// ["W", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", "W", " ", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", "W", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", " ", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", "W", "W", " ", "W", " ", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", " ", " ", " ", "W", " ", " ", " ", "W", " ", "W", " ", " ", " ", " ", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W", " ", "W", "W", "W", " ", "W", " ", "F"]
-// ["S", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", "W", "W"]
-// ["W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", "W", " ", "W", " ", "W", " ", " ", " ", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", "W", "W", "W", "W", "W", "W", "W", " ", "W", "W", "W", "W", "W", " ", "W", " ", "W", " ", "W"]
-// ["W", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", " ", " ", " ", " ", "W", " ", " ", " ", "W"]
-// ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
-
-    document.getElementsByClassName("player")[0].style.top = startTop + "px";
-    document.getElementsByClassName("player")[0].style.left = startLeft + "px";
 
 });
+
+function moveCell(nextRowPos, nextCellPos) {
+    // https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes#CSS_access
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+    const nextCell = document.querySelector(`.cell[data-row='${nextRowPos}'][data-cell='${nextCellPos}']`);
+    prevCell.removeChild(playerDiv);
+    nextCell.appendChild(playerDiv);
+    prevCell = nextCell;
+}
 
 function printWin() {
     let destination = document.getElementById("winMessage");

@@ -39,9 +39,9 @@ h1 {
     width: 40px;
     height: 40px;
     background-color: green;
-    position: absolute;
-    left: 300px;
-    top: 440px;
+    position: relative;
+    left: 0px;
+    top: 0px;
 }
 
 #winMessage {
