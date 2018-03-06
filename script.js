@@ -62,11 +62,11 @@ window.onload = function () {
 }
 
 let startTop = 440;
-let startLeft = 300;
+let startLeft = 8;
 
 document.addEventListener("keydown", (event) => {
     const keyName = event.key;
-
+    const currentCell = mapArray
     outerloop: for (let i = 0; i < mapArray.length; i++) {
         innerloop: for (let j = 0; j < mapArray[i].length; j++) {
             if (mapArray[i][j] === "S" && mapArray[i][j + 1] === " " && keyName === "ArrowRight") {

@@ -1,7 +1,7 @@
-#flex {
+/* #flex {
     display: flex;
     justify-content: center;
-}
+} */
 
 #flex2 {
     display: flex;
@@ -23,6 +23,8 @@ h1 {
 .cell {
     width: 40px;
     height: 40px;
+    display: flex;
+    justify-content: center;
 }
 
 .floor {
@@ -39,10 +41,10 @@ h1 {
     width: 40px;
     height: 40px;
     background-color: green;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     position: absolute;
-    left: 300px;
-    top: 440px;
+    /* left: 10px;
+    top:  440px; */
 }
 
 #winMessage {
